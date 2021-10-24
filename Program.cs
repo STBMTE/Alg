@@ -10,7 +10,7 @@ namespace Algorithms
     {
         static void Main(string[] args)
         {
-            Algoritm[,] PowAlgArray = new Algoritm[4, 2000];
+            Algoritm[,] PowAlgArray = new Algoritm[5, 2000];
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 2000; j++)
@@ -33,13 +33,17 @@ namespace Algorithms
                     }
                 }
             }
+            for(int i = 0; i < 2000; i++)
+            {
+                PowAlgArray[4, i] = new Matrix(new int[i]);
+            }
             try
             {
                 using (StreamWriter SW = new StreamWriter("../../../Exponent1.csv", false, Encoding.Default))
                 {
                     for (int i = 0; i < 2000; i++)
                     {
-                        SW.WriteLine($"{i};{PowAlgArray[0, i].Result};{PowAlgArray[1, i].Result};{PowAlgArray[2, i].Result};{PowAlgArray[3, i].Result}");
+                        SW.WriteLine($"{i};{PowAlgArray[0, i].Result};{PowAlgArray[1, i].Result};{PowAlgArray[2, i].Result};{PowAlgArray[3, i].Result};{PowAlgArray[4, i].Result}");
                     }
                 }
             }
@@ -194,6 +198,54 @@ namespace Algorithms
             return f;
         }
     }
+
+    class Matrix : Algoritm
+    {
+        public override long Result { get; set; }
+
+        public Matrix(int[] @param)
+        {
+            
+            ElapsedTime(param);
+        }
+        private int[,] MatrixGeneration(int[] @param)
+        {
+            int length = param.Length;
+            int[,] Matri = new int[length, length];
+            Random rnd = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                     Matri[i, j] = Math.Abs(rnd.Next());
+                }
+            }
+            return Matri;
+        }
+        public override int PerformingAlgoritm(int[] param)
+        {
+            int[,] Matrix1 = MatrixGeneration(param);
+            int[,] Matrix2 = MatrixGeneration(param);
+            Multiplay(Matrix1, Matrix2);
+            return 0;
+        }
+
+        private void Multiplay(int[,] a, int[,] b) 
+        {
+            if (a.GetUpperBound(0) + 1 != 0 && b.GetUpperBound(0) + 1 != 0)
+            {
+                int[,] ResultMatrix = new int[a.GetUpperBound(0) + 1,b.GetUpperBound(0) + 1];
+                for (int i = 0; i < a.GetUpperBound(0) + 1; i++)
+                {
+                    for (int j = 0; j < b.GetUpperBound(0) + 1; j++)
+                    {
+                        ResultMatrix[i, j] = a[i, j] * b[i, j];
+                    }
+                }
+            }
+        }
+
+    }
     class alg
     {
         public alg()
@@ -205,7 +257,7 @@ namespace Algorithms
         {
             long[,] Time = new long[7, 2000];
             var sw = new Stopwatch();
-            for(int i = 0; i < 2000; i++)
+            for (int i = 0; i < 2000; i++)
             {
                 int[] array = VectorGeneration(i);
                 long time = 0;
@@ -456,4 +508,3 @@ namespace Algorithms
         }*/
     }
 }
-
