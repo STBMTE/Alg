@@ -279,7 +279,7 @@ namespace Algorithms
         }
         public long[,] performing()
         {
-            long[,] Time = new long[7, 2000];
+            long[,] Time = new long[8, 2000];
             var sw = new Stopwatch();
             for (int i = 0; i < 2000; i++)
             {
@@ -309,6 +309,14 @@ namespace Algorithms
                 TimSortCall(array);
                 sw.Stop();
                 Time[5, i] = sw.ElapsedTicks;
+                sw.Restart();
+                CountingSort(array);
+                sw.Stop();
+                Time[6, i] = sw.ElapsedTicks;
+                sw.Restart();
+                Heapsort(array);
+                sw.Stop();
+                Time[7, i] = sw.ElapsedTicks;
             }
             return Time;
         }
@@ -320,7 +328,7 @@ namespace Algorithms
                 {
                     for (int i = 0; i < 2000; i++)
                     {
-                        SW.WriteLine($"{i};{array[0, i]};{array[1, i]};{array[2, i]};{array[3, i]};{array[4, i]};{array[5, i]}");
+                        SW.WriteLine($"{i};{array[0, i]};{array[1, i]};{array[2, i]};{array[3, i]};{array[4, i]};{array[5, i]};{array[6, i]};{array[7, i]}");
                     }
                 }
             }
@@ -336,7 +344,7 @@ namespace Algorithms
             int[] nArr = new int[n];
             for (int i = 0; i < n; i++)
             {
-                nArr[i] = Math.Abs(rnd.Next());
+                nArr[i] = Math.Abs(rnd.Next() % 3000);
             }
             return nArr;
         }
@@ -513,22 +521,70 @@ namespace Algorithms
                 }
             }
         }
-        /*public void CountingSort(int[] array)
+        public void CountingSort(int[] array)
         {
-            int[] count = new int[array.Length + 1];
-            for(int i = 0; i < array.Length; i++)
+            if (array.Length != 0)
             {
-                count[array[i]]++;
-            }
-            int index = 0;
-            for(int i = 0; i < count.Length; i++)
-            {
-                for(int j = 0; j < count[i]; j++)
+                int maxValue = int.MinValue;
+                for (int i = 0; i < array.Length; i++)
                 {
-                    array[index] = i;
-                    index++;
+                    if (array[i] > maxValue)
+                    {
+                        maxValue = array[i];
+                    }
+                }
+                int[] count = new int[maxValue + 1];
+                for (int i = 0; i < array.Length; i++)
+                {
+                    count[array[i]]++;
+                }
+                int index = 0;
+                for (int i = 0; i < count.Length; i++)
+                {
+                    for (int j = 0; j < count[i]; j++)
+                    {
+                        array[index] = i;
+                        index++;
+                    }
                 }
             }
-        }*/
+        }
+        public void Heapsort(int[] arr)
+        {
+            int n = arr.Length;
+            for (int i = n / 2 - 1; i >= 0; i--)
+            {
+                heapify(arr, n, i);
+            }
+            for (int i = n - 1; i >= 0; i--)
+            {
+                int temp = arr[0];
+                arr[0] = arr[i];
+                arr[i] = temp;
+                heapify(arr, i, 0);
+            }
+            
+        }
+        void heapify(int[] arr, int n, int i)
+        {
+            int largest = i;
+            int l = 2 * i + 1;
+            int r = 2 * i + 2;
+            if (l < n && arr[l] > arr[largest])
+            {
+                largest = l;
+            }
+            if (r < n && arr[r] > arr[largest])
+            {
+                largest = r;
+            }
+            if (largest != i)
+            {
+                int swap = arr[i];
+                arr[i] = arr[largest];
+                arr[largest] = swap;
+                heapify(arr, n, largest);
+            }
+        }
     }
 }
